@@ -1,0 +1,143 @@
+[project]
+name = "db-connector"
+version = "0.1.0"
+description = "A Python project template"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "leoliu", email = "your@email.com"}
+]
+keywords = ["python", "template", "project"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "typer>=0.9.0",
+    "rich>=13.7.0",
+    "pydantic>=2.6.0",
+    "keyring>=25.6.0",
+    "sqlalchemy>=2.0.37",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.9",
+    "pytest>=7.4.4",
+    "black>=23.12.1",
+    "pre-commit>=3.6.0",
+    "pre-commit-hooks>=4.5.0",
+    "mypy>=1.7.1",
+    "coverage>=7.4.0",
+]
+docs = [
+    "mkdocs>=1.5.3",
+    "mkdocstrings[python]>=0.24.0",
+    "pdoc>=0.10.0",
+]
+test = [
+    "pytest>=7.4.4",
+    "pytest-cov>=4.1.0",
+]
+
+[project.scripts]
+db-connect = "db_connector.cli:app"
+
+[build-system]
+requires = ["setuptools>=68.2.0", "wheel", "setuptools_scm[toml]>=7.1.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["db_connector"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "C4",  # flake8-comprehensions
+]
+ignore = ["E501"]  # Line too long (handled by black)
+
+[tool.ruff.isort]
+known-first-party = ["db_connector"]
+combine-as-imports = true
+lines-after-imports = 2
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+preview = true
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=db_connector --cov-report=term-missing"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning",
+]
+
+[tool.coverage.run]
+source = ["db_connector"]
+omit = ["tests/*"]
+
+[tool.pdoc]
+output_dir = "docs"
+docformat = "google"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
+
+[tool.pre-commit]
+repos = [
+    {   
+        repo = "https://github.com/pre-commit/pre-commit-hooks"
+        rev = "v4.6.0"
+        hooks = [
+            {id = "check-added-large-files"},
+            {id = "check-executables-have-shebangs"},
+            {id = "check-executables-have-shebangs", name = "check-executables-have-shebangs (deprecated)", stages = ["commit"]},
+            {id = "check-yaml"},
+            {id = "end-of-file-fixer"},
+            {id = "trailing-whitespace"}
+        ]
+    },
+    {   
+        repo = "https://github.com/astral-sh/ruff-pre-commit"
+        rev = "v0.0.212"
+        hooks = [
+            {id = "ruff"}
+        ]
+    },
+    {
+        repo = "https://github.com/pre-commit/mirrors-mypy"
+        rev = "v0.991"
+        hooks = [
+            {id = "mypy", additional_dependencies = ["mypy"], stages = ["commit"]}
+        ]
+    }
+]
